@@ -1,0 +1,63 @@
+spring:
+  profiles:
+    active: dev
+
+server:
+  port: 8989
+
+---
+spring:
+  profiles: self
+  main:
+    allow-bean-definition-overriding: true
+  hibernate:
+    use-new-id-generator-mappings: true # https://jojoldu.tistory.com/295
+  h2:
+    console:
+      enabled: true
+      settings:
+        web-allow-others: true
+  datasource:
+    url: jdbc:h2:mem:test;Mode=MySQL;DB_CLOSE_ON_EXIT=FALSE;DB_CLOSE_DELAY=-1;INIT=CREATE SCHEMA IF NOT EXISTS \"public\";
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+      dialect: org.hibernate.dialect.MySQL5InnoDBDialect #MySQL57Dialect
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+logging:
+  level:
+    org.hibernate.type: trace
+---
+spring:
+  profiles: dev
+  datasource:
+    url: jdbc:mariadb://192.168.40.147:3306/servertest?useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: servertest
+    password: bnp@1234
+    driver-class-name: org.mariadb.jdbc.Driver
+    test-on-borrow: true
+    test-while-idle: true
+    validation-query: select 1
+    max-active: 10
+    max-idle: 5
+    min-idle: 1
+    initial-size: 5
+    time-between-eviction-runs-millis: 50000
+    min-evictable-idle-time-millis: 60000
+  jpa:
+    database: mysql
+    hibernate.ddl-auto: create-drop
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+logging:
+  level:
+    org.springframework.orm.jpa.JpaTransactionManager: DEBUG
+#    org.hibernate.type: trace
